@@ -39,7 +39,7 @@ struct pop
 {
 	int edge[3*MAX+10];
 	double fit_value;
-}pop[popsize+1],pbest[popsize+1],gbest,NPbest,gWorst,NP[Np+1],NJ[Nj+1],NS[Ns+1],prepop[popsize+1]; 
+}pop[popsize+1],pbest[popsize+1],gbest,NPbest,gWorst,NP[Np+1],NJ[Nj+1],NS[Ns+1],prepop[popsize+1],randP; 
 //struct record  
 //{
 //	int num[4];  

@@ -27,6 +27,11 @@ void InitializePop()
 				  gbest.edge[j]=pop[i].edge[j];
 				gbest.fit_value=pop[i].fit_value;
 			}
+			if(i==popsize){
+				for(j=1;j<=3*(vertice-1);j++)
+				  gWorst.edge[j]=pop[i].edge[j];
+				gWorst.fit_value=pop[i].fit_value;
+			}
 	    for(j=1;j<=3*(vertice-1);j++)
             pbest[i].edge[j]=pop[i].edge[j]; 
         pbest[i].fit_value=pop[i].fit_value;

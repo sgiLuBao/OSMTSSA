@@ -9,6 +9,7 @@
 #include"GetMutation.cpp"
 #include"GetCrossover_self.cpp"
 #include"GetCrossover_global.cpp"
+#include"GetCrossover_global_bydef.cpp"
 #include"Dividepop.cpp"
 #include"NsIndex.cpp"
 #include"updateBest.cpp"
@@ -21,7 +22,7 @@ bool se(struct record2 a, struct record2 b)
 	else if(a.s==b.s&&a.e<b.e) return true;
 	else return false;
 }
-void SSA(char *str){
+int main(){
 	int eval,i,j,index,flag,pp;
 	eval=1;
     index=1;
@@ -31,7 +32,7 @@ void SSA(char *str){
 	/*
 		生成问题模型阶段、预处理阶段、初始化生成树阶段与划分种群 
 	*/
-	GenerateGraph(str);
+	GenerateGraph();
 	clock_t start1=clock();
 	pre_treatment();
     clock_t finish1=clock();
@@ -52,7 +53,8 @@ void SSA(char *str){
 		{
 			w_now=w_now-inerdec; 
 			ST_now=1-w_now;
-            c1_now=c1_now-c1_dec;
+//            c1_now=c1_now-c1_dec;
+			c1_now=1;
 		}
 		c2_now=c1_now;
 		if(eval==evaluations)
@@ -65,9 +67,10 @@ void SSA(char *str){
 		//发现者 
 		for(i=1;i<=Np;i++) 
 		{	
+			   double R=rand()/(RAND_MAX+1.0); //产生随机数，小于w_now则变异
 			  //变异pop(i) 
-			  if(GetMutation_SSA(i)){
-			  		GetCrossover_self(i); //变异后的pop(i)与pbest(i)进行交叉 
+			  if(R>=ST_now){ 
+			  		GetCrossover_rand(i); //变异后的pop(i)与pbest(i)进行交叉 
 			  }
 			  else{
 			  	GetCrossover_global(i); //未变异的pop(i)与 pbest进行交叉 
@@ -80,24 +83,28 @@ void SSA(char *str){
 		{
 			//第一阶段 
 			if(i>(popsize/2)){
-			  GetMutation_SSA(i); //变异
-			  GetCrossover_self(i); 
-			  GetCrossover_global(i); //全局感知
+			  	InitializeTree();  
+	  		    for(j=1;j<=3*(vertice-1);j++)
+			       randP.edge[j]=min_tree[j]; 	
+			  GetCrossover_worstr_bydef; 
 			}else{
 			  GetCrossover_xp(i); 
-			  GetCrossover_global(i); //全局感知
+			  GetMutation_SSA(i);
+			  GetCrossover_xp(i); //全局感知
 			} 
 		}
 		//侦察者
 		NsIndex();//计算侦察者下标 
-		for(i=1;i<=Ns;i++) {
+		for(i=1;i<=20;i++) {
 			if(NS[i].fit_value>min_fitness){
-				GetCrossover_self(i); 
+//				GetCrossover_global_bydef(i); 
+				GetMutation_SSA(i);
 				GetCrossover_global(i); //全局感知
 			}
 			else{
-				GetMutation_SSA(i); //变异
+				GetMutation_SSA(i);
 				GetCrossover_self(i);
+//				GetCrossover_global(i);
 			}
 		}
 		//更新个体最优pbest ,全局最优值min_fitness，gbest 
@@ -253,25 +260,10 @@ void SSA(char *str){
 		fprintf(fout,"%d ",gbest.edge[j]);
 	fprintf(fout,"\n%lf",gbest.fit_value);
 	fclose(fout);
-}
-
-int main(){
-	for(int j=0;j<=1;j++){
-		char bench[8];
-		sprintf(bench,"%s%d%s","rc1",j,".txt");
-		printf("基准函数: %s\n", bench );
-		FILE *fp;
-		fp = fopen("C:\\Users\\zly\\Desktop\\111.xlsx","a") ;//不想覆盖就用a 
-		fprintf(fp,"%s\n",bench) ;
-		fclose(fp);
-		for(int i=0;i<10;i++){
-			SSA(bench);
-			FILE *fp;
-			fp = fopen("C:\\Users\\zly\\Desktop\\111.xlsx","a") ;//不想覆盖就用a 
-			fprintf(fp,"%lf\t%lf\n",bfgbestF,gbest.fit_value) ;
-			fclose(fp);
-		}
-	}
+	FILE *fp;
+	fp = fopen("C:\\Users\\zly\\Desktop\\SSA.xlsx","a") ;//不想覆盖就用a 
+	fprintf(fp,"%lf\t%lf\n",bfgbestF,gbest.fit_value) ;
+	fclose(fp);
 	return 0;
 }
 

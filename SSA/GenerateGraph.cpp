@@ -1,8 +1,8 @@
-void GenerateGraph(char *str)
+void GenerateGraph()
 {
     int i,j=1;
 	FILE *fin;
-	fin=fopen(str,"r");
+	fin=fopen("rc02.txt","r");
 	fscanf(fin,"%d",&vertice);//顶点个数（即引脚个数），读取第一行 
 	for(i=1;i<=vertice;i++) 
 		fscanf(fin,"%lf%lf",&graph[i][0],&graph[i][1]);
