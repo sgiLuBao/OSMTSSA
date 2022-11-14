@@ -36,6 +36,7 @@ int main(){
 	clock_t start1=clock();
 	pre_treatment();
     clock_t finish1=clock();
+    PretreatmentTime=(double)(finish1-start1)/CLOCKS_PER_SEC;
 	printf("pretreatment time:%lf",(double)(finish1-start1)/CLOCKS_PER_SEC);//预处理时间
 	InitializePop();//生成pop[1] - pop[popsize]
 	min_fitness=pop[1].fit_value;
@@ -143,6 +144,7 @@ int main(){
 	printf("\n最优粒子的总线长为：%lf\n",gbest.fit_value);
 	bfgbestF = gbest.fit_value;
 	clock_t finish2=clock();
+	FlyingTime = (double)(finish2-start2)/CLOCKS_PER_SEC;
 	printf("flying time:%lf\n",(double)(finish2-start2)/CLOCKS_PER_SEC);
 	
 	for(i=1;i<=(vertice-1);i++)
@@ -253,6 +255,7 @@ int main(){
 		  }
 	   }
 	   clock_t finish3=clock();
+	   AdjustingTime=(double)(finish3-start3)/CLOCKS_PER_SEC;
 	   printf("adjusting time:%lf\n",(double)(finish3-start3)/CLOCKS_PER_SEC);
        FILE *fout;
        fout=fopen("point.txt","w"); 
@@ -271,6 +274,7 @@ int main(){
 	     min_tree[i*3]=gbest.edge[i*3];
 	   }
 	gbest.fit_value=Getfitness();
+	afAgbestF=gbest.fit_value;
 	printf("before refine:%lf\n",gbest.fit_value);
 	FILE *fout;
 	fout=fopen("rrr.txt","w");
@@ -281,6 +285,7 @@ int main(){
 	clock_t start4=clock();
     refine();
 	clock_t finish4=clock();
+	RefineTime=(double)(finish4-start4)/CLOCKS_PER_SEC;
 	   printf("refine time:%lf\n",(double)(finish4-start4)/CLOCKS_PER_SEC);
     printf("result：%lf\n",gbest.fit_value);
 
@@ -290,8 +295,8 @@ int main(){
 	fprintf(fout,"\n%lf",gbest.fit_value);
 	fclose(fout);
 	FILE *fp;
-	fp = fopen("C:\\Users\\zly\\Desktop\\SSA.xlsx","a") ;//不想覆盖就用a 
-	fprintf(fp,"%lf\t%lf\n",bfgbestF,gbest.fit_value) ;
+	fp = fopen("C:\\Users\\zly\\Desktop\\MSHSSA.xls","a") ;//不想覆盖就用a 
+	fprintf(fp,"%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",bfgbestF,gbest.fit_value,afAgbestF,PretreatmentTime,FlyingTime,AdjustingTime,RefineTime) ;
 	fclose(fp);
 	return 0;
 }
