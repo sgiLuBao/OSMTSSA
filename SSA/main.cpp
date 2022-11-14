@@ -41,7 +41,7 @@ int main(){
 	min_fitness=pop[1].fit_value;
 	worst_fitness = pop[popsize].fit_value;
 	
-		/*
+	/*
 		更新阶段 
 	*/ 
 	clock_t start2=clock();
@@ -67,10 +67,20 @@ int main(){
 		//发现者 
 		for(i=1;i<=Np;i++) 
 		{	
-			   double R=rand()/(RAND_MAX+1.0); //产生随机数，小于w_now则变异
+			    double R=rand()/(RAND_MAX+1.0); //产生随机数
+			    double CRr=rand()/(RAND_MAX+1.0); //产生随机数
+			    int jrr=rand() % popsize + 1;  //生成一个1-popsize的随机数
 			  //变异pop(i) 
 			  if(R>=ST_now){ 
-			  		GetCrossover_rand(i); //变异后的pop(i)与pbest(i)进行交叉 
+			  		if(CRr<CRR || jrr==i){
+			  			GetMutation(i);
+			  			GetCrossover_self(i);
+			  			GetCrossover_global(i);
+					  }else{
+					  	GetCrossover_rand(i); //变异后的pop(i)与pbest(i)进行交叉 
+					  	GetCrossover_global(i); 
+					  }
+			  		
 			  }
 			  else{
 			  	GetCrossover_global(i); //未变异的pop(i)与 pbest进行交叉 
@@ -81,12 +91,22 @@ int main(){
 		//跟随者 
 		for(i=Np+1;i<=popsize;i++) 
 		{
+			double CRr=rand()/(RAND_MAX+1.0); //产生随机数
+			int jrr=rand() % popsize + 1;  //生成一个1-popsize的随机数
 			//第一阶段 
 			if(i>(popsize/2)){
-			  	InitializeTree();  
-	  		    for(j=1;j<=3*(vertice-1);j++)
-			       randP.edge[j]=min_tree[j]; 	
-			  GetCrossover_worstr_bydef; 
+				if(CRr<CRR || jrr==i){
+			  		GetMutation(i);
+			  		GetCrossover_self(i);
+			  		GetCrossover_global(i);
+				}
+				else{
+					InitializeTree();  
+	  		        for(j=1;j<=3*(vertice-1);j++)
+			       		randP.edge[j]=min_tree[j]; 	
+//			       	GetMutation(i);
+			  		GetCrossover_worstr_bydef(i); 
+				}
 			}else{
 			  GetCrossover_xp(i); 
 			  GetMutation_SSA(i);
@@ -95,16 +115,25 @@ int main(){
 		}
 		//侦察者
 		NsIndex();//计算侦察者下标 
-		for(i=1;i<=20;i++) {
+		for(i=1;i<=80;i++) {
 			if(NS[i].fit_value>min_fitness){
 //				GetCrossover_global_bydef(i); 
 				GetMutation_SSA(i);
 				GetCrossover_global(i); //全局感知
 			}
 			else{
-				GetMutation_SSA(i);
-				GetCrossover_self(i);
-//				GetCrossover_global(i);
+				double CRr=rand()/(RAND_MAX+1.0); //产生随机数
+			    int jrr=rand() % popsize + 1;  //生成一个1-popsize的随机数
+				if(CRr<CRR || jrr==i){
+			  		GetMutation(i);
+			  		GetCrossover_self(i);
+			  		GetCrossover_global(i);
+				}
+				else{
+					GetMutation_SSA(i);
+				    GetCrossover_self(i);
+//				    GetCrossover_global(i);	
+				}
 			}
 		}
 		//更新个体最优pbest ,全局最优值min_fitness，gbest 

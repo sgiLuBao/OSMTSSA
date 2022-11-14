@@ -17,6 +17,7 @@ const double w_end=0.4;
 const int w_varyfor=evaluations;
 double w_now;
 double ST_now;
+double CRR=0.3;
 const double inerdec=(w_start-w_end)/w_varyfor;
 const double c1_start=0.9;
 const double c1_end=0.15;

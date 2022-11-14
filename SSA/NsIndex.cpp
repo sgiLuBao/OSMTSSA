@@ -1,6 +1,6 @@
 void NsIndex(){
 	int i=0,j,r;
-	srand((int)time(0));   //用当前时间作为随机种子 
+	srand(time(NULL));   //用当前时间作为随机种子 
 	while(i<Ns)
 	{
 		r=rand() % popsize + 1;  //生成一个1-popsize的随机数 
