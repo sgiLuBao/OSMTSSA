@@ -2,7 +2,7 @@ void GenerateGraph()
 {
     int i,j=1;
 	FILE *fin;
-	fin=fopen("rc11.txt","r");
+	fin=fopen("rc02.txt","r");
 	fscanf(fin,"%d",&vertice);
 	for(i=1;i<=vertice;i++) 
 		fscanf(fin,"%lf%lf",&graph[i][0],&graph[i][1]);

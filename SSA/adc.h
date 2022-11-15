@@ -9,7 +9,7 @@ using namespace std;
 const int popsize=100; 
 const int Np = 10;//发现者比例 
 const int Nj = 90;//参与者比例 
-const int Ns = 80;//侦察者比例 
+const int Ns = 20;//侦察者比例 
 const int evaluations=300; 
 const int endeval=evaluations;
 const double w_start=0.95;
@@ -36,7 +36,7 @@ const double P=0.7071;
 int vertice,barr_num,extra_num,del_num,add_num;
 double graph[MAX][2]={0},graphw[MAX][MAX]={0},barr[10010][4];
 int min_tree[3*MAX+10]={0}; 
-int NsIdx[20]={0};
+int NsIdx[80]={0};
 bool cor_sign[10010][4]={false};
 double min_fitness;
 double worst_fitness;
