@@ -1,4 +1,4 @@
-#include"adc.h"
+#include"Header.h"
 #include"strictbarr.cpp" 
 #include"GenerateGraph.cpp"
 #include"pre.cpp"
@@ -18,7 +18,7 @@ bool se(struct record2 a, struct record2 b)
 	else if(a.s==b.s&&a.e<b.e) return true;
 	else return false;
 }
-void PSO()
+int main()
 {
 	int eval,i,j,index,flag,pp;
     double min_fitness;
@@ -29,6 +29,7 @@ void PSO()
 	clock_t start1=clock();
 	pre_treatment();
     clock_t finish1=clock();
+    PretreatmentTime=(double)(finish1-start1)/CLOCKS_PER_SEC;
 	printf("pretreatment time:%lf",(double)(finish1-start1)/CLOCKS_PER_SEC);//预处理时间
 //	printf("%d\n",records1[1][7].c[2]); 
 //	printf("%d\n",records1[72][3].c[1]); 
@@ -88,8 +89,9 @@ void PSO()
 //	for(j=1;j<=3*(vertice-1);j++)
 //		printf("%d ",gbest.edge[j]);
 	printf("\n最优粒子的总线长为：%lf\n",gbest.fit_value);
-	bfgbestF = gbest.fit_value; 
+	bfgbestF = gbest.fit_value;
 	clock_t finish2=clock();
+	FlyingTime = (double)(finish2-start2)/CLOCKS_PER_SEC;
 	printf("flying time:%lf\n",(double)(finish2-start2)/CLOCKS_PER_SEC);
 	
 //	printf("精炼后，%d个粒子经过%d次迭代，找到的最优粒子为：\n",popsize,evaluations);
@@ -204,6 +206,7 @@ void PSO()
 		  }
 	   }
 	   clock_t finish3=clock();
+	   AdjustingTime=(double)(finish3-start3)/CLOCKS_PER_SEC;
 	   printf("adjusting time:%lf\n",(double)(finish3-start3)/CLOCKS_PER_SEC);
        FILE *fout;
        fout=fopen("point.txt","w"); 
@@ -222,6 +225,7 @@ void PSO()
 	     min_tree[i*3]=gbest.edge[i*3];
 	   }
 	gbest.fit_value=Getfitness();
+		afAgbestF=gbest.fit_value;
 	printf("before refine:%lf\n",gbest.fit_value);
 	FILE *fout;
 	fout=fopen("rrr.txt","w");
@@ -232,6 +236,7 @@ void PSO()
 	clock_t start4=clock();
     refine();
 	clock_t finish4=clock();
+	RefineTime=(double)(finish4-start4)/CLOCKS_PER_SEC;
 	   printf("refine time:%lf\n",(double)(finish4-start4)/CLOCKS_PER_SEC);
     printf("result：%lf\n",gbest.fit_value);
 
@@ -240,15 +245,9 @@ void PSO()
 		fprintf(fout,"%d ",gbest.edge[j]);
 	fprintf(fout,"\n%lf",gbest.fit_value);
 	fclose(fout);
-}
-
-int main(){
-	for(int i=0;i<10;i++){
-		PSO();
-		FILE *fp;
-		fp = fopen("C:\\Users\\zly\\Desktop\\PSO.xlsx","a") ;//不想覆盖就用a 
-		fprintf(fp,"%lf\t%lf\n",bfgbestF,gbest.fit_value) ;
-		fclose(fp);
-	}
+	FILE *fp;
+	fp = fopen("C:\\Users\\zly\\Desktop\\MSHSSA.xls","a") ;//不想覆盖就用a 
+	fprintf(fp,"%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n",bfgbestF,gbest.fit_value,afAgbestF,PretreatmentTime,FlyingTime,AdjustingTime,RefineTime) ;
+	fclose(fp);
 	return 0;
 }
